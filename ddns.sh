@@ -170,8 +170,8 @@ uninstall_ddns(){
 menu(){
 	clear
 	echo "#############################################################"
-	echo -e "#                     ${RED}动态Ddns一键脚本${NC}                      #"
-	echo -e "#                     ${GREEN}作者${NC}: 你挺能闹啊🍏                    #"
+	echo -e "#  ${RED}动态Ddns一键脚本${NC}       #"
+	echo -e "#  ${GREEN}作者${NC}: 你挺能闹啊🍏  #"
 	echo "#############################################################"
 	echo ""
 	echo -e " ${GREEN}1.${NC} ${GREEN}安装 Ddns${NC}"
