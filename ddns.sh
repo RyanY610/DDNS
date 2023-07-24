@@ -180,6 +180,7 @@ menu(){
 	echo -e " ${GREEN}4.${NC} ${GREEN}启动 Ddns${NC}"
 	echo -e " ${GREEN}0.${NC} 退出脚本"
 	read -rp "请输入选项 [0-4]: " meun
+        echo ""
 	echo ""
 	case "$meun" in
 		1) install_ddns ;;
