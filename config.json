@@ -1,0 +1,13 @@
+{
+        "$schema": "https://cloudflare.com/schema/v2.8.json",
+        "debug": false,
+        "cache": false,
+        "dns": "server",
+        "id": "12345678",
+        "token": "abcd1234",
+        "index4": "public",
+        "index6": "public",
+        "ipv4": ["cloudflare.com"],
+        "ipv6": ["cloud1flare.com"],
+        "ttl": 120
+}
