@@ -149,6 +149,7 @@ run_ddns(){
 	fi
 	systemctl enable ddns.timer
 	systemctl restart ddns.timer
+        systemctl start ddns.service
 	mainmenu
 }
 
