@@ -20,28 +20,19 @@ install_base() {
         echo -e "${GREEN}未安装 Python3，正在安装...${NC}"
 
         # 检测操作系统类型
-        if [ -f /etc/os-release ]; then
+        OS=$(cat /etc/os-release | grep -o -E "Debian|Ubuntu|CentOS" | head -n 1)
+        if [[ "$OS" != "Debian" && "$OS" != "Ubuntu" && "$OS" != "CentOS" ]]; then
+            echo -e "${Error} 很抱歉，你的系统不受支持！${NC}"
+            exit 1
+        fi
 
-            # CentOS
-            if grep -qiE "centos" /etc/os-release; then
-                echo -e "${GREEN}CentOS 操作系统，开始安装Python3...${NC}"
-                yum install epel-release -y
-                yum install python3 -y
-            fi
-
-            # Debian
-            if grep -qiE "debian" /etc/os-release; then
-                echo -e "${GREEN}Debian 操作系统，开始安装Python3...${NC}"
-                apt install python3 -y
-            fi
-
-            # Ubuntu
-            if grep -qiE "ubuntu" /etc/os-release; then
-                echo -e "${GREEN}Ubuntu 操作系统，开始安装Python3...${NC}"
-                apt install python3 -y
-            fi
+        if [[ "$OS" == "CentOS" ]]; then
+            echo -e "${GREEN}${OS} 操作系统，开始安装Python3...${NC}"
+            yum install epel-release -y
+            yum install python3 -y
         else
-            echo -e "${RED}无法确定操作系统类型，无法自动安装Python3。${NC}" mainmenu
+            echo -e "${GREEN}${OS} 操作系统，开始安装Python3...${NC}"
+            apt install python3 -y
         fi
     fi
 
