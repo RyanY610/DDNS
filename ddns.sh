@@ -124,7 +124,7 @@ run_ddns() {
 	Description=RyanY610 ddns timer
 
 	[Timer]
-	OnUnitActiveSec=5m
+	OnUnitActiveSec=30s
 	Unit=ddns.service
 
 	[Install]
