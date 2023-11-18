@@ -31,7 +31,9 @@ check_root(){
 
 # 开始安装DDNS
 install_ddns(){
-    curl -o /usr/bin/DDNS https://raw.githubusercontent.com/RyanY610/DDNS/main/ddns.sh && chmod +x /usr/bin/DDNS
+    if [ ! -f "/usr/bin/ddns" ]; then
+        curl -o /usr/bin/ddns https://raw.githubusercontent.com/RyanY610/DDNS/main/ddns.sh && chmod +x /usr/bin/ddns
+    fi
     mkdir -p /etc/DDNS
     cat <<'EOF' > /etc/DDNS/DDNS
 #!/bin/bash
@@ -138,9 +140,9 @@ go_ahead(){
             check_ddns_install
         ;;
         2)
-            systemctl disable ddns.service ddns.timer
-            systemctl stop ddns.service ddns.timer
-            rm -rf /etc/systemd/system/ddns.service /etc/systemd/system/ddns.timer /etc/DDNS
+            systemctl disable ddns.service ddns.timer >/dev/null 2>&1
+            systemctl stop ddns.service ddns.timer >/dev/null 2>&1
+            rm -rf /etc/systemd/system/ddns.service /etc/systemd/system/ddns.timer /etc/DDNS /usr/bin/ddns
         ;;
         3)
             set_domain
