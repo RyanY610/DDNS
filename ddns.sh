@@ -16,7 +16,7 @@ cop_info(){
 clear
 echo -e "${GREEN}#####################################${NC}
 ${GREEN}#           ${RED}DDNS 一键脚本           ${GREEN}#${NC}
-${GREEN}#         作者: ${YELLOW}你挺能闹啊🍏        ${GREEN}#${NC}
+${GREEN}#         作者: ${YELLOW}你挺能闹啊🍏         ${GREEN}#${NC}
 ${GREEN}#####################################${NC}"
 echo
 }
