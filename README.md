@@ -2,5 +2,5 @@
 
 ## Ddns一键脚本
 ```
-bash <(curl -sSL https://raw.githubusercontent.com/RyanY610/Ddns/main/ddns.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/RyanY610/DDNS/main/ddns.sh)
 ```
