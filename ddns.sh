@@ -115,7 +115,6 @@ check_ddns_status() {
     fi
 }
 
-
 # 后续操作
 go_ahead(){
     echo -e "${Tip}选择一个选项：
@@ -126,7 +125,7 @@ go_ahead(){
   ${GREEN}4${NC}：修改 Cloudflare Api"
     echo
     read -p "选项: " option
-    until [[ "$option" =~ ^[0-3]$ ]]; do
+    until [[ "$option" =~ ^[0-4]$ ]]; do
         echo -e "${Error}请输入正确的数字 [0-4]"
         echo
         exit 1
@@ -143,6 +142,8 @@ go_ahead(){
             systemctl disable ddns.service ddns.timer >/dev/null 2>&1
             systemctl stop ddns.service ddns.timer >/dev/null 2>&1
             rm -rf /etc/systemd/system/ddns.service /etc/systemd/system/ddns.timer /etc/DDNS /usr/bin/ddns
+            echo -e "${Info}DDNS 已卸载"
+            echo
         ;;
         3)
             set_domain
@@ -152,7 +153,13 @@ go_ahead(){
         4)
             set_cloudflare_api
             set_domain
-            restart_ddns
+            if [ ! -f "/etc/systemd/system/ddns.service" ] || [ ! -f "/etc/systemd/system/ddns.timer" ]; then
+                run_ddns
+                sleep 3
+            else
+               restart_ddns
+               sleep 3
+            fi
             check_ddns_install
         ;;
     esac
@@ -234,11 +241,11 @@ WantedBy=multi-user.target'
         echo "$service" >/etc/systemd/system/ddns.service
         echo "$timer" >/etc/systemd/system/ddns.timer
         echo -e "${Info}ddns定时任务已创建，每1分钟执行一次！"
+        systemctl enable --now ddns.service >/dev/null 2>&1
+        systemctl enable --now ddns.timer >/dev/null 2>&1
     else
         echo -e "${Tip}服务和定时器单元文件已存在，无需再次创建！"
     fi
-    systemctl enable --now ddns.service >/dev/null 2>&1
-    systemctl enable --now ddns.timer >/dev/null 2>&1
 }
 
 # 重启DDNS服务
@@ -257,7 +264,7 @@ check_ddns_install(){
         set_cloudflare_api
         set_domain
         run_ddns
-        echo -e "${Info}执行 ${GREEN}DDNS${NC} 可呼出菜单！"
+        echo -e "${Info}执行 ${GREEN}ddns${NC} 可呼出菜单！"
     else
         cop_info
         check_ddns_status
@@ -265,6 +272,7 @@ check_ddns_install(){
             echo -e "${Info}DDNS：${GREEN}已安装${NC} 并 ${GREEN}已启动${NC}"
         else
             echo -e "${Tip}DDNS：${GREEN}已安装${NC} 但 ${RED}未启动${NC}"
+            echo -e "${Tip}请选择 ${GREEN}4${NC} 重新配置 Cloudflare Api"
         fi
     echo
     go_ahead
