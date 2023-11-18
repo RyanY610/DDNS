@@ -31,7 +31,7 @@ check_root(){
 
 # 开始安装DDNS
 install_ddns(){
-    curl -o /usr/bin/DDNS https://raw.githubusercontent.com/RyanY610/Ddns/main/ddns.sh && chmod +x /usr/bin/DDNS
+    curl -o /usr/bin/DDNS https://raw.githubusercontent.com/RyanY610/DDNS/main/ddns.sh && chmod +x /usr/bin/DDNS
     mkdir -p /etc/DDNS
     cat <<'EOF' > /etc/DDNS/DDNS
 #!/bin/bash
