@@ -142,12 +142,13 @@ go_ahead(){
             systemctl disable ddns.service ddns.timer >/dev/null 2>&1
             systemctl stop ddns.service ddns.timer >/dev/null 2>&1
             rm -rf /etc/systemd/system/ddns.service /etc/systemd/system/ddns.timer /etc/DDNS /usr/bin/ddns
-            echo -e "${Info}DDNS 已卸载"
+            echo -e "${Info}DDNS 已卸载！"
             echo
         ;;
         3)
             set_domain
             restart_ddns
+            sleep 3
             check_ddns_install
         ;;
         4)
