@@ -106,12 +106,14 @@ EOF
 }
 
 # 检查 DDNS 状态
-check_ddns_status() {
-    STatus=$(systemctl status ddns.timer | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
-    if [[ $STatus =~ "waiting"|"running" ]]; then
-        ddns_status=running
-    else
-        ddns_status=dead
+check_ddns_status(){
+    if [[ -f "/etc/systemd/system/ddns.timer" ]]; then
+        STatus=$(systemctl status ddns.timer | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+        if [[ $STatus =~ "waiting"|"running" ]]; then
+            ddns_status=running
+        else
+            ddns_status=dead
+        fi
     fi
 }
 
