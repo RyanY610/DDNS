@@ -43,12 +43,15 @@ source /etc/DDNS/.config
 
 # 获取当前的公网IPv4地址和IPv6地址
 if [[ $WgcfIPv4Status =~ "on"|"plus" ]] || [[ $WgcfIPv6Status =~ "on"|"plus" ]]; then
+    wg-quick down warp >/dev/null 2>&1
     wg-quick down wgcf >/dev/null 2>&1
     systemctl stop warp-go >/dev/null 2>&1
     Public_IPv4=$(curl -s4m8 api64.ipify.org -k)
     Public_IPv6=$(curl -s6m8 api64.ipify.org -k)
+    sleep 3
     wg-quick up wgcf >/dev/null 2>&1
     systemctl start warp-go >/dev/null 2>&1
+    wg-quick up warp >/dev/null 2>&1
 else
     Public_IPv4=$(curl -s4m8 api64.ipify.org -k)
     Public_IPv6=$(curl -s6m8 api64.ipify.org -k)
