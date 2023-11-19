@@ -41,22 +41,6 @@ install_ddns(){
 # 引入环境变量文件
 source /etc/DDNS/.config
 
-# 获取当前的公网IPv4地址和IPv6地址
-if [[ $WgcfIPv4Status =~ "on"|"plus" ]] || [[ $WgcfIPv6Status =~ "on"|"plus" ]]; then
-    wg-quick down warp >/dev/null 2>&1
-    wg-quick down wgcf >/dev/null 2>&1
-    systemctl stop warp-go >/dev/null 2>&1
-    Public_IPv4=$(curl -s4m8 api64.ipify.org -k)
-    Public_IPv6=$(curl -s6m8 api64.ipify.org -k)
-    sleep 3
-    wg-quick up wgcf >/dev/null 2>&1
-    systemctl start warp-go >/dev/null 2>&1
-    wg-quick up warp >/dev/null 2>&1
-else
-    Public_IPv4=$(curl -s4m8 api64.ipify.org -k)
-    Public_IPv6=$(curl -s6m8 api64.ipify.org -k)
-fi
-
 # 更新IPv4 DNS记录
 curl -s -X PUT "https://api.cloudflare.com/client/v4/zones/$Zone_id/dns_records/$DNS_IDv4" \
      -H "X-Auth-Email: $Email" \
@@ -79,9 +63,9 @@ Api_key="your_api_key"  # 你的Cloudflare API密钥
 # 获取根域名
 Root_domain=$(echo "$Domain" | cut -d'.' -f2-)
 
-# 检查Warp状态
-WgcfIPv4Status=$(curl -s4m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
-WgcfIPv6Status=$(curl -s6m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
+# 获取公网IP地址
+Public_IPv4=$(curl -s4m8 api64.ipify.org -k)
+Public_IPv6=$(curl -s6m8 api64.ipify.org -k)
 
 # 使用Cloudflare API获取根域名的区域ID
 Zone_id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones?name=$Root_domain" \
