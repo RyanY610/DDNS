@@ -64,8 +64,26 @@ Api_key="your_api_key"  # 你的Cloudflare API密钥
 Root_domain=$(echo "$Domain" | cut -d'.' -f2-)
 
 # 获取公网IP地址
-Public_IPv4=$(curl -s4m8 api64.ipify.org -k)
-Public_IPv6=$(curl -s6m8 api64.ipify.org -k)
+regex_pattern='^(eth|ens|eno|esp|enp)[0-9]+'
+
+InterFace=($(ip link show | awk -F': ' '{print $2}' | grep -E "$regex_pattern" | sed "s/@.*//g"))
+
+Public_IPv4=""
+Public_IPv6=""
+
+for i in "${InterFace[@]}"; do
+    ipv4=$(curl -s4m8 --interface "$i" api64.ipify.org -k | sed '/^\(2a09\|104\.28\)/d')
+    ipv6=$(curl -s6m8 --interface "$i" api64.ipify.org -k | sed '/^\(2a09\|104\.28\)/d')
+    
+    # 检查是否获取到IP地址
+    if [[ -n "$ipv4" ]]; then
+        Public_IPv4="$ipv4"
+    fi
+    
+    if [[ -n "$ipv6" ]]; then
+        Public_IPv6="$ipv6"
+    fi
+done
 
 # 使用Cloudflare API获取根域名的区域ID
 Zone_id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones?name=$Root_domain" \
@@ -137,7 +155,7 @@ go_ahead(){
         3)
             set_domain
             restart_ddns
-            sleep 3
+            sleep 2
             check_ddns_install
         ;;
         4)
@@ -145,10 +163,10 @@ go_ahead(){
             set_domain
             if [ ! -f "/etc/systemd/system/ddns.service" ] || [ ! -f "/etc/systemd/system/ddns.timer" ]; then
                 run_ddns
-                sleep 3
+                sleep 2
             else
                restart_ddns
-               sleep 3
+               sleep 2
             fi
             check_ddns_install
         ;;
