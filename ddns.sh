@@ -264,8 +264,8 @@ restart_ddns(){
 
 # 检查是否安装DDNS
 check_ddns_install(){
+    cop_info
     if [ ! -f "/etc/DDNS/.config" ]; then
-        cop_info
         echo -e "${Tip}DDNS 未安装，现在开始安装..."
         echo
         install_ddns
@@ -274,7 +274,6 @@ check_ddns_install(){
         run_ddns
         echo -e "${Info}执行 ${GREEN}ddns${NC} 可呼出菜单！"
     else
-        cop_info
         check_ddns_status
         if [[ "$ddns_status" == "running" ]]; then
             echo -e "${Info}DDNS：${GREEN}已安装${NC} 并 ${GREEN}已启动${NC}"
