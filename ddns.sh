@@ -242,7 +242,7 @@ OnUnitActiveSec=60s
 Unit=ddns.service
 
 [Install]
-WantedBy=multi-user.target'
+WantedBy=timers.target'
 
     if [ ! -f "/etc/systemd/system/ddns.service" ] || [ ! -f "/etc/systemd/system/ddns.timer" ]; then
         echo -e "${Info}创建ddns定时任务..."
