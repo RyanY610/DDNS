@@ -229,7 +229,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/etc/DDNS
-ExecStart=bash DDNS
+ExecStart=bash /etc/DDNS/DDNS
 
 [Install]
 WantedBy=multi-user.target'
