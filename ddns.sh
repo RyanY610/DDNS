@@ -64,7 +64,7 @@ Api_key="your_api_key"  # 你的Cloudflare API密钥
 Root_domain=$(echo "$Domain" | cut -d'.' -f2-)
 
 # 获取公网IP地址
-regex_pattern='^(eth|ens|eno|esp|enp|venet)[0-9]+'
+regex_pattern='^(eth|ens|eno|esp|enp|venet|vif)[0-9]+'
 
 InterFace=($(ip link show | awk -F': ' '{print $2}' | grep -E "$regex_pattern" | sed "s/@.*//g"))
 
