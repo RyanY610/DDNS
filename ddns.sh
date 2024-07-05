@@ -64,24 +64,16 @@ Api_key="your_api_key"  # 你的Cloudflare API密钥
 Root_domain=$(echo "$Domain" | cut -d'.' -f2-)
 
 # 获取公网IP地址
-regex_pattern='^(eth|ens|eno|esp|enp|venet|vif)[0-9]+'
+InterFace=($(netstat -i | awk '{print $1}' | grep -E '^(eth|ens|eno|esp|enp|venet|vif)'))
 
-InterFace=($(ip link show | awk -F': ' '{print $2}' | grep -E "$regex_pattern" | sed "s/@.*//g"))
-
-Public_IPv4=""
-Public_IPv6=""
-
-for i in "${InterFace[@]}"; do
-    ipv4=$(curl -s4m8 --interface "$i" api64.ipify.org -k | sed '/^\(2a09\|104\.28\)/d')
-    ipv6=$(curl -s6m8 --interface "$i" api64.ipify.org -k | sed '/^\(2a09\|104\.28\)/d')
+for i in "${InFaces[@]}"; do # 从网口循环获取IP
+    ipv4=$(curl -s4 --max-time 2 --interface "$i" ip.gs)
+    ipv6=$(curl -s6 --max-time 2 --interface "$i" ip.gs)
     
-    # 检查是否获取到IP地址
-    if [[ -n "$ipv4" ]]; then
+    if [[ -n "$ipv4" || -n "$ipv6" ]]; then # 检查是否获取到IP地址
         Public_IPv4="$ipv4"
-    fi
-    
-    if [[ -n "$ipv6" ]]; then
         Public_IPv6="$ipv6"
+        break # 获取到任一IP类型停止循环
     fi
 done
 
