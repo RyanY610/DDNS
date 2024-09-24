@@ -67,8 +67,8 @@ Root_domain=$(echo "$Domain" | cut -d'.' -f2-)
 InterFace=($(netstat -i | awk '{print $1}' | grep -E '^(eth|ens|eno|esp|enp|venet|vif)'))
 
 for i in "${InFaces[@]}"; do # 从网口循环获取IP
-    ipv4=$(curl -s4 --max-time 2 --interface "$i" ip.gs)
-    ipv6=$(curl -s6 --max-time 2 --interface "$i" ip.gs)
+    Public_IPv4=$(curl -s4 --max-time 2 --interface "$i" ip.gs)
+    Public_IPv6=$(curl -s6 --max-time 2 --interface "$i" ip.gs)
     
     if [[ -n "$Public_IPv4" ]]; then # 检查是否获取到IP地址
         Public_IPv4="$ipv4"
