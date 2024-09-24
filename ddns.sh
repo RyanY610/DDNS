@@ -46,14 +46,14 @@ curl -s -X PUT "https://api.cloudflare.com/client/v4/zones/$Zone_id/dns_records/
      -H "X-Auth-Email: $Email" \
      -H "X-Auth-Key: $Api_key" \
      -H "Content-Type: application/json" \
-     --data "{\"type\":\"A\",\"name\":\"$Domain\",\"content\":\"$Public_IPv4\"}" >/dev/null 2>&1
+     --data "{\"type\":\"A\",\"name\":\"$Domain\",\"content\":\"$IPv4\"}" >/dev/null 2>&1
 
 # 更新IPv6 DNS记录
 curl -s -X PUT "https://api.cloudflare.com/client/v4/zones/$Zone_id/dns_records/$DNS_IDv6" \
      -H "X-Auth-Email: $Email" \
      -H "X-Auth-Key: $Api_key" \
      -H "Content-Type: application/json" \
-     --data "{\"type\":\"AAAA\",\"name\":\"$Domain\",\"content\":\"$Public_IPv6\"}" >/dev/null 2>&1
+     --data "{\"type\":\"AAAA\",\"name\":\"$Domain\",\"content\":\"$IPv6\"}" >/dev/null 2>&1
 EOF
     cat <<'EOF' > /etc/DDNS/.config
 Domain="your_domain.com"		# 你要解析的域名
@@ -67,12 +67,10 @@ Root_domain=$(echo "$Domain" | cut -d'.' -f2-)
 InFaces=($(netstat -i | awk '{print $1}' | grep -E '^(eth|ens|eno|esp|enp|venet|vif)'))
 
 for i in "${InFaces[@]}"; do # 从网口循环获取IP
-    ipv4=$(curl -s4 --max-time 2 --interface "$i" ip.gs)
-    ipv6=$(curl -s6 --max-time 2 --interface "$i" ip.gs)
+    IPv4=$(curl -s4 --max-time 2 --interface "$i" ip.gs)
+    IPv6=$(curl -s6 --max-time 2 --interface "$i" ip.gs)
     
-    if [[ -n "$ipv4" ]]; then # 检查是否获取到IP地址
-        Public_IPv4="$ipv4"
-        Public_IPv6="$ipv6"
+    if [[ -n "$IPv4" ]]; then # 检查是否获取到IP地址
         break # 获取到任一IP类型停止循环
     fi
 done
