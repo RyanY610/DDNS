@@ -64,7 +64,7 @@ Api_key="your_api_key"  # 你的Cloudflare API密钥
 Root_domain=$(echo "$Domain" | cut -d'.' -f2-)
 
 # 获取公网IP地址
-InFaces=($(ls /sys/class/net | grep -E '^(eth|ens|eno|esp|enp|venet|vif)'))
+InFaces=($(ls /sys/class/net | grep -E '^(eth|ens|eno|esp|enp|venet|veth|vif)'))
 
 for i in "${InFaces[@]}"; do # 从网口循环获取IP
     IPv4=$(curl -s4 --max-time 2 --interface "$i" ip.gs)
